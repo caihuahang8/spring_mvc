@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>获取验证码</title>
+</head>
+<body>
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+    var countdown=60;
+    function settime(obj) {
+        if (countdown == 0) {
+            // getcode();
+            obj.removeAttribute("disabled");
+            obj.value="免费获取验证码";
+            countdown = 60;
+
+            return;
+        } else {
+            obj.setAttribute("disabled", true);
+            obj.value="重新发送(" + countdown + "s)";
+            countdown--;
+        }
+        setTimeout(function() {
+                settime(obj) }
+            ,1000)
+    }
+
+    function getcode(obj){
+        settime(obj);
+        $.ajax({
+            //请求方式
+            type : "POST",
+            //请求的媒体类型
+            // dataType:'json',
+            //请求地址
+            url : "/getCodeNum?phoneNum="+$("#phoneNum").val(),
+            //数据，json字符串
+            // data : {"phoneNum":$("#phoneNum").val(),"email":$("#email").val(),"mobileNumber":$("#mobileNumber").val(),"message":$("#message").val(),},
+            //请求成功
+            success : function(result) {
+                if (result=="success"){
+                    alert("短信发送成功");
+                } else {
+                    alert("短信发送失败 ")
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+
+    }
+
+
+    jQuery(document).ready(function($) {
+
+    });
+
+
+
+</script>
+<p>电话号码:<input id="phoneNum" /><input type="button" id="btn" value="免费获取验证码" onclick="getcode(this)" /></p>
+
+</body>
+</html>
